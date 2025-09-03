@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Love Jar</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ffe6f0, #ffb6c1);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #d6336c;
+      margin-bottom: 20px;
+      text-align: center;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      font-size: 2.5em;
+    }
+
+    #loveJar {
+      width: 320px;
+      height: 420px;
+      background: #fff0f6;
+      border: 4px solid #d6336c;
+      border-radius: 20px;
+      padding: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(214, 51, 108, 0.4);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      position: relative;
+      cursor: pointer;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    #loveJar::before {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 40px;
+      background: #d6336c;
+      border: 3px solid #a02a53;
+      border-radius: 50% 50% 30% 30%;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #loveJar:hover {
+      box-shadow: 0 12px 35px rgba(214, 51, 108, 0.6);
+      transform: scale(1.02);
+    }
+
+    .note {
+      background: linear-gradient(145deg, #ffb6c1, #ff8fab);
+      border-radius: 12px;
+      padding: 12px;
+      width: 100px;
+      min-height: 70px;
+      box-shadow: 2px 2px 8px rgba(214, 51, 108, 0.5);
+      font-size: 14px;
+      color: #660029;
+      word-wrap: break-word;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .note:hover {
+      transform: scale(1.05);
+      box-shadow: 3px 3px 12px rgba(214, 51, 108, 0.8);
+    }
+
+    form {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+      width: 320px;
+      align-items: center;
+    }
+
+    textarea {
+      resize: none;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 3px solid #d6336c;
+      outline: none;
+      height: 90px;
+      font-family: inherit;
+      width: 100%;
+      background: #fff;
+    }
+
+    button {
+      margin-top: 15px;
+      background: linear-gradient(145deg, #d6336c, #a02a53);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(214, 51, 108, 0.3);
+    }
+
+    button:hover {
+      background: linear-gradient(145deg, #a02a53, #801538);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(214, 51, 108, 0.5);
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.7);
+      animation: fadeIn 0.5s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      animation: slideIn 0.5s;
+      position: relative;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .close {
+      color: #aaa;
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #d6336c;
+    }
+
+    #modalText {
+      color: #d6336c;
+      font-size: 18px;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      min-height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #instruction {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #660029;
+      text-align: center;
+      max-width: 320px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Love Jar</h1>
+  <div id="loveJar" title="Click the jar to draw a random love note!">
+    <!-- Love notes will appear here -->
+  </div>
+
+  <div id="instruction">
+    Add a love note below, then click the jar to draw a random one!
+  </div>
+
+  <form id="loveForm">
+    <textarea id="loveInput" placeholder="Write your heartfelt love note here..." maxlength="200" required></textarea>
+    <button type="submit">Add Love Note</button>
+  </form>
+
+  <!-- Modal for displaying the random note -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="modalText"></p>
+    </div>
+  </div>
+
+  <script>
+    const loveForm = document.getElementById('loveForm');
+    const loveInput = document.getElementById('loveInput');
+    const loveJar = document.getElementById('loveJar');
+    const modal = document.getElementById('modal');
+    const modalText = document.getElementById('modalText');
+    const closeBtn = document.querySelector('.close');
+
+    loveForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const noteText = loveInput.value.trim();
+      if (noteText.length === 0) return;
+
+      // Create a new note element
+      const note = document.createElement('div');
+      note.classList.add('note');
+      note.textContent = noteText;
+      note.style.transform = `rotate(${Math.random() * 10 - 5}deg)`; // Random rotation for variety
+
+      // Add the note to the jar
+      loveJar.appendChild(note);
+
+      // Clear the textarea
+      loveInput.value = '';
+    });
+
+    // Click event on the love jar to draw a random note
+    loveJar.addEventListener('click', function() {
+      const notes = loveJar.querySelectorAll('.note');
+      if (notes.length === 0) {
+        alert('No notes yet! Add some love first.');
+        return;
+      }
+
+      const randomIndex = Math.floor(Math.random() * notes.length);
+      const selectedNote = notes[randomIndex];
+
+      // Display the note in the modal
+      modalText.textContent = selectedNote.textContent;
+      modal.style.display = 'block';
+    });
+
+    // Close the modal when clicking the close button
+    closeBtn.addEventListener('click', function() {
+      modal.style.display = 'none';
+    });
+
+    // Close the modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
+</content>
+</create_file>
